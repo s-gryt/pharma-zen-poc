@@ -21,10 +21,16 @@ export const ProductCard: React.FC<ProductCardProps> = ({
   product, 
   onViewDetails 
 }) => {
-  const { addToCart, loading } = useCart();
+  const { addToCart } = useCart();
+  const [loading, setLoading] = React.useState(false);
 
   const handleAddToCart = async () => {
-    await addToCart(product, 1);
+    setLoading(true);
+    try {
+      await addToCart(product, 1);
+    } finally {
+      setLoading(false);
+    }
   };
 
   const formatPrice = (price: number): string => {

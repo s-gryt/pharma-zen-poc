@@ -28,6 +28,7 @@ import { useNavigate } from 'react-router-dom';
  * - Proceed to checkout
  */
 const CartPage: React.FC = () => {
+  const navigate = useNavigate();
   const { cart, loading, removeFromCart, addToCart } = useCart();
 
   const formatPrice = (price: number): string => {
@@ -82,7 +83,7 @@ const CartPage: React.FC = () => {
             <Button
               variant="contained"
               size="large"
-              href="/products"
+              onClick={() => navigate('/products')}
             >
               Browse Products
             </Button>
@@ -218,7 +219,7 @@ const CartPage: React.FC = () => {
                   variant="contained"
                   size="large"
                   fullWidth
-                  href="/checkout"
+                  onClick={() => navigate('/checkout')}
                   className="mb-2"
                 >
                   Proceed to Checkout
@@ -228,7 +229,7 @@ const CartPage: React.FC = () => {
                   variant="outlined"
                   size="large"
                   fullWidth
-                  href="/products"
+                  onClick={() => navigate('/products')}
                 >
                   Continue Shopping
                 </Button>

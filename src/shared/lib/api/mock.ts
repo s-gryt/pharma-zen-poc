@@ -286,7 +286,113 @@ let mockProducts: Product[] = [
 ];
 
 let mockCarts: Cart[] = [];
-let mockOrders: Order[] = [];
+let mockOrders: Order[] = [
+  {
+    id: 'order-1',
+    userId: '1',
+    items: [
+      {
+        id: 'item-1',
+        productId: 'prod-1',
+        quantity: 2,
+        price: 12.99,
+        product: {
+          id: 'prod-1',
+          name: 'Acetaminophen 500mg',
+          description: 'Pain reliever and fever reducer for headaches, muscle aches, and minor pain',
+          price: 12.99,
+          category: 'pharmacy',
+          inStock: true,
+          stockQuantity: 100,
+          imageUrl: '/placeholder.svg',
+          createdAt: '2024-01-01T00:00:00Z',
+          updatedAt: '2024-01-01T00:00:00Z',
+        },
+      },
+    ],
+    totalAmount: 25.98,
+    status: 'pending',
+    shippingAddress: {
+      street: '123 Main St',
+      city: 'Anytown',
+      state: 'CA',
+      zipCode: '12345',
+      country: 'US',
+    },
+    createdAt: '2024-01-15T00:00:00Z',
+    updatedAt: '2024-01-15T00:00:00Z',
+  },
+  {
+    id: 'order-2',
+    userId: '1',
+    items: [
+      {
+        id: 'item-2',
+        productId: 'prod-3',
+        quantity: 1,
+        price: 24.99,
+        product: {
+          id: 'prod-3',
+          name: 'Moisturizing Face Cream',
+          description: 'Daily hydrating face cream for all skin types with SPF 15 protection',
+          price: 24.99,
+          category: 'personal-care',
+          inStock: true,
+          stockQuantity: 25,
+          imageUrl: '/placeholder.svg',
+          createdAt: '2024-01-01T00:00:00Z',
+          updatedAt: '2024-01-01T00:00:00Z',
+        },
+      },
+    ],
+    totalAmount: 24.99,
+    status: 'shipped',
+    shippingAddress: {
+      street: '123 Main St',
+      city: 'Anytown',
+      state: 'CA',
+      zipCode: '12345',
+      country: 'US',
+    },
+    createdAt: '2024-01-10T00:00:00Z',
+    updatedAt: '2024-01-12T00:00:00Z',
+  },
+  {
+    id: 'order-3',
+    userId: '1',
+    items: [
+      {
+        id: 'item-3',
+        productId: 'prod-2',
+        quantity: 3,
+        price: 15.99,
+        product: {
+          id: 'prod-2',
+          name: 'Vitamin D3 2000 IU',
+          description: 'Supports bone and immune health with high-potency vitamin D supplement',
+          price: 15.99,
+          category: 'health',
+          inStock: true,
+          stockQuantity: 50,
+          imageUrl: '/placeholder.svg',
+          createdAt: '2024-01-01T00:00:00Z',
+          updatedAt: '2024-01-01T00:00:00Z',
+        },
+      },
+    ],
+    totalAmount: 47.97,
+    status: 'delivered',
+    shippingAddress: {
+      street: '456 Oak Ave',
+      city: 'Other City',
+      state: 'NY',
+      zipCode: '67890',
+      country: 'US',
+    },
+    createdAt: '2024-01-05T00:00:00Z',
+    updatedAt: '2024-01-08T00:00:00Z',
+  },
+];
 let currentUser: User | null = null;
 
 /**

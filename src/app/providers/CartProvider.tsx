@@ -51,10 +51,10 @@ export const CartProvider: React.FC<CartProviderProps> = ({ children }) => {
   const { isAuthenticated, user } = useAuth();
 
   /**
-   * Load cart when user is authenticated
+   * Load cart when user is authenticated and is a customer
    */
   useEffect(() => {
-    if (isAuthenticated && user) {
+    if (isAuthenticated && user && user.role === 'customer') {
       refreshCart();
     } else {
       setCart(null);
@@ -83,8 +83,8 @@ export const CartProvider: React.FC<CartProviderProps> = ({ children }) => {
    * Add product to cart
    */
   const addToCart = async (product: Product, quantity: number = 1): Promise<void> => {
-    if (!isAuthenticated) {
-      toast.error('Please sign in to add items to cart');
+    if (!isAuthenticated || user?.role !== 'customer') {
+      toast.error('Please sign in as a customer to add items to cart');
       return;
     }
 

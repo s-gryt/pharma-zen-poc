@@ -116,7 +116,7 @@ const CheckoutPage: React.FC = () => {
           <Alert severity="warning" className="mb-4">
             Your cart is empty. Please add items before checkout.
           </Alert>
-          <Button variant="contained" href="/products">
+          <Button variant="contained" onClick={() => navigate('/products')}>
             Browse Products
           </Button>
         </Container>
@@ -328,7 +328,7 @@ const CheckoutPage: React.FC = () => {
                   variant="outlined"
                   size="large"
                   fullWidth
-                  href="/cart"
+                  onClick={() => navigate('/cart')}
                   disabled={loading}
                 >
                   Back to Cart
