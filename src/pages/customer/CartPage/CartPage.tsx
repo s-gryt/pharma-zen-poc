@@ -14,6 +14,7 @@ import { Add, Remove, Delete, ShoppingCartOutlined } from '@mui/icons-material';
 import { CustomerLayout } from '../components/CustomerLayout';
 import { useCart } from '@/app/providers/CartProvider';
 import { LoadingSpinner } from '@/shared/components/ui/LoadingSpinner';
+import { useNavigate } from 'react-router-dom';
 
 /**
  * Shopping cart page component

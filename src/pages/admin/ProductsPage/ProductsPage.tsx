@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useCallback } from 'react';
 import {
   Container,
   Typography,
@@ -43,11 +43,12 @@ const ProductsPage: React.FC = () => {
   const [productToDelete, setProductToDelete] = useState<Product | null>(null);
 
   // Fetch products
+  const fetchProducts = useCallback(() => mockProductsApi.getProducts(), []);
   const {
     data: products,
     loading: productsLoading,
     execute: refetchProducts
-  } = useApi(() => mockProductsApi.getProducts(), { immediate: true });
+  } = useApi(fetchProducts, { immediate: true });
 
   // Create product mutation
   const {

@@ -62,23 +62,20 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
    */
   useEffect(() => {
     const initializeAuth = async () => {
-      if (authToken && userData) {
-        try {
-          // Validate stored session by checking with mock API
-          const response = await mockAuthApi.getCurrentUser();
-          setUser(response.data);
-        } catch (error) {
-          // Invalid session, clear stored data
-          removeAuthToken();
-          removeUserData();
+      try {
+        // Restore session from localStorage without calling mock API
+        if (authToken && userData) {
+          setUser(userData);
+        } else {
           setUser(null);
         }
+      } finally {
+        setLoading(false);
       }
-      setLoading(false);
     };
 
     initializeAuth();
-  }, [authToken, userData, removeAuthToken, removeUserData]);
+  }, [authToken, userData]);
 
   /**
    * Login user with email and password

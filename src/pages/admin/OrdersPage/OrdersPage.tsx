@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useCallback } from 'react';
 import {
   Container,
   Typography,
@@ -49,11 +49,12 @@ const OrdersPage: React.FC = () => {
   const [newStatus, setNewStatus] = useState<OrderStatus>('pending');
 
   // Fetch orders
+  const fetchOrders = useCallback(() => mockOrdersApi.getAllOrders(), []);
   const {
     data: orders,
     loading: ordersLoading,
     execute: refetchOrders
-  } = useApi(() => mockOrdersApi.getAllOrders(), { immediate: true });
+  } = useApi(fetchOrders, { immediate: true });
 
   // Update order status mutation
   const {
