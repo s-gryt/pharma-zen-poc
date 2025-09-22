@@ -393,7 +393,37 @@ let mockOrders: Order[] = [
     updatedAt: '2024-01-08T00:00:00Z',
   },
 ];
+
+/**
+ * Current authenticated user (simulates server-side session)
+ */
 let currentUser: User | null = null;
+
+/**
+ * Initialize current user from stored token if available
+ */
+const initializeCurrentUser = () => {
+  try {
+    const storedToken = localStorage.getItem('auth_token');
+    const storedUser = localStorage.getItem('user_data');
+    
+    if (storedToken && storedUser) {
+      const parsedToken = JSON.parse(storedToken);
+      const parsedUser = JSON.parse(storedUser);
+      
+      if (parsedToken && parsedUser) {
+        currentUser = parsedUser;
+      }
+    }
+  } catch (error) {
+    console.warn('Failed to restore user session:', error);
+  }
+};
+
+// Initialize on module load
+if (typeof window !== 'undefined') {
+  initializeCurrentUser();
+}
 
 /**
  * Generate unique ID for mock entities
@@ -581,6 +611,11 @@ export const mockCartApi = {
    */
   async getCart(): Promise<ApiResponse<Cart | null>> {
     await delay();
+
+    // Try to restore current user if not set
+    if (!currentUser) {
+      initializeCurrentUser();
+    }
 
     if (!currentUser) {
       throw new Error('User not authenticated');

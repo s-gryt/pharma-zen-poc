@@ -1,8 +1,9 @@
 import React from 'react';
-import { Container, Typography, Button, Card, CardContent } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
-import { ShoppingCart, LocalPharmacy, HealthAndSafety, Person } from '@mui/icons-material';
+import { ShoppingCart, Pill, Heart, User } from 'lucide-react';
 import { CustomerLayout } from '../components/CustomerLayout';
+import { Button } from '@/components/ui/button';
+import { Card, CardContent } from '@/components/ui/card';
 
 /**
  * Customer home page component
@@ -20,120 +21,120 @@ const HomePage: React.FC = () => {
     {
       title: 'Pharmacy',
       description: 'Prescription medications and health consultations',
-      icon: <LocalPharmacy fontSize="large" />,
+      icon: <Pill className="w-12 h-12" />,
       path: '/products?category=pharmacy',
     },
     {
       title: 'Health & Wellness',
       description: 'Vitamins, supplements, and health monitoring',
-      icon: <HealthAndSafety fontSize="large" />,
+      icon: <Heart className="w-12 h-12" />,
       path: '/products?category=health',
     },
     {
       title: 'Personal Care',
       description: 'Beauty products, skincare, and daily essentials',
-      icon: <Person fontSize="large" />,
+      icon: <User className="w-12 h-12" />,
       path: '/products?category=personal-care',
     },
   ];
 
   return (
     <CustomerLayout>
-      <Container maxWidth="lg" className="py-8">
+      <div className="container mx-auto px-4 py-8">
         {/* Hero Section */}
         <div className="text-center mb-12">
-          <Typography variant="h2" component="h1" gutterBottom>
+          <h1 className="text-5xl font-bold mb-4 text-walgreens-red">
             Welcome to Walgreens
-          </Typography>
-          <Typography variant="h6" color="textSecondary" className="mb-6">
+          </h1>
+          <p className="text-xl text-muted-foreground mb-8">
             Your trusted partner in health and wellness
-          </Typography>
-          <div className="space-x-4">
+          </p>
+          <div className="flex gap-4 justify-center">
             <Button
-              variant="contained"
-              size="large"
+              size="lg"
               onClick={() => navigate('/products')}
-              className="mr-4"
+              className="bg-walgreens-red hover:bg-walgreens-red/90"
             >
               Shop Now
             </Button>
             <Button
-              variant="outlined"
-              size="large"
-              startIcon={<ShoppingCart />}
+              variant="outline"
+              size="lg"
               onClick={() => navigate('/cart')}
+              className="border-walgreens-red text-walgreens-red hover:bg-walgreens-red hover:text-white"
             >
+              <ShoppingCart className="w-4 h-4 mr-2" />
               View Cart
             </Button>
           </div>
         </div>
 
         {/* Categories Section */}
-        <Typography variant="h4" component="h2" className="mb-6 text-center">
-          Shop by Category
-        </Typography>
+        <h2 className="text-3xl font-bold text-center mb-8">Shop by Category</h2>
         
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
           {categories.map((category) => (
-            <div key={category.title}>
-              <Card 
-                className="h-full cursor-pointer transition-transform hover:scale-105"
-                onClick={() => navigate(category.path)}
-              >
-                <CardContent className="text-center p-6">
-                  <div className="mb-4 text-primary">
-                    {category.icon}
-                  </div>
-                  <Typography variant="h5" component="h3" gutterBottom>
-                    {category.title}
-                  </Typography>
-                  <Typography variant="body2" color="textSecondary" className="mb-4">
-                    {category.description}
-                  </Typography>
-                  <Button variant="outlined">
-                    Browse {category.title}
-                  </Button>
-                </CardContent>
-              </Card>
-            </div>
+            <Card 
+              key={category.title}
+              className="cursor-pointer transition-all hover:scale-105 hover:shadow-lg border-walgreens-blue/20"
+              onClick={() => navigate(category.path)}
+            >
+              <CardContent className="text-center p-8">
+                <div className="mb-6 text-walgreens-red flex justify-center">
+                  {category.icon}
+                </div>
+                <h3 className="text-xl font-semibold mb-3 text-walgreens-blue">
+                  {category.title}
+                </h3>
+                <p className="text-muted-foreground mb-6">
+                  {category.description}
+                </p>
+                <Button 
+                  variant="outline"
+                  className="border-walgreens-blue text-walgreens-blue hover:bg-walgreens-blue hover:text-white"
+                >
+                  Browse {category.title}
+                </Button>
+              </CardContent>
+            </Card>
           ))}
         </div>
 
         {/* Features Section */}
-        <Card className="bg-secondary">
-          <CardContent className="text-center p-8">
-            <Typography variant="h4" component="h2" className="mb-4">
+        <Card className="bg-gradient-to-r from-walgreens-light-blue to-walgreens-teal">
+          <CardContent className="text-center p-12">
+            <h2 className="text-3xl font-bold mb-8 text-walgreens-blue">
               Why Choose Walgreens?
-            </Typography>
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            </h2>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
               <div>
-                <Typography variant="h6" gutterBottom>
+                <h3 className="text-xl font-semibold mb-3 text-walgreens-blue">
                   Trusted Quality
-                </Typography>
-                <Typography variant="body2" color="textSecondary">
+                </h3>
+                <p className="text-muted-foreground">
                   Over 100 years of healthcare expertise and trusted products
-                </Typography>
+                </p>
               </div>
               <div>
-                <Typography variant="h6" gutterBottom>
+                <h3 className="text-xl font-semibold mb-3 text-walgreens-blue">
                   Convenient Shopping
-                </Typography>
-                <Typography variant="body2" color="textSecondary">
+                </h3>
+                <p className="text-muted-foreground">
                   Easy online ordering with in-store pickup and delivery options
-                </Typography>
+                </p>
               </div>
               <div>
-                <Typography variant="h6" gutterBottom>
+                <h3 className="text-xl font-semibold mb-3 text-walgreens-blue">
                   Expert Care
-                </Typography>
-                <Typography variant="body2" color="textSecondary">
+                </h3>
+                <p className="text-muted-foreground">
                   Professional pharmacists and healthcare consultations
-                </Typography>
+                </p>
               </div>
             </div>
           </CardContent>
         </Card>
-      </Container>
+      </div>
     </CustomerLayout>
   );
 };

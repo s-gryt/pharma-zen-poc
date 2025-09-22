@@ -30,6 +30,12 @@ All colors MUST be HSL.
     --accent: 217 100% 50%;
     --accent-foreground: 0 0% 100%;
 
+    /* Walgreens Brand Colors */
+    --walgreens-red: 0 77% 47%;
+    --walgreens-blue: 215 100% 20%;
+    --walgreens-light-blue: 194 100% 88%;
+    --walgreens-teal: 174 62% 45%;
+
     --destructive: 0 84.2% 60.2%;
     --destructive-foreground: 0 0% 100%;
 

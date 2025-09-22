@@ -1,18 +1,11 @@
 import React from 'react';
-import {
-  AppBar,
-  Toolbar,
-  Typography,
-  Button,
-  Container,
-  IconButton,
-  Badge,
-} from '@mui/material';
-import { ShoppingCart, Home, Inventory } from '@mui/icons-material';
 import { useNavigate } from 'react-router-dom';
+import { ShoppingCart, Home, Package, User } from 'lucide-react';
 import { UserMenu } from '@/shared/components/navigation/UserMenu';
 import { useAuth } from '@/app/providers/AuthProvider';
 import { useCart } from '@/app/providers/CartProvider';
+import { Button } from '@/components/ui/button';
+import { Badge } from '@/components/ui/badge';
 
 /**
  * Customer layout props interface
@@ -40,90 +33,96 @@ export const CustomerLayout: React.FC<CustomerLayoutProps> = ({ children }) => {
   return (
     <div className="min-h-screen bg-background">
       {/* Top Navigation Bar */}
-      <AppBar 
-        position="static" 
-        elevation={1}
-        sx={{ 
-          backgroundColor: 'var(--card)', 
-          color: 'var(--card-foreground)' 
-        }}
-      >
-        <Toolbar>
-          {/* Logo */}
-          <Typography 
-            variant="h6" 
-            component="div" 
-            sx={{ flexGrow: 1, cursor: 'pointer' }}
-            onClick={() => navigate('/')}
-            className="font-semibold"
-          >
-            Walgreens POC
-          </Typography>
-
-          {/* Navigation Links */}
-          <Button 
-            color="inherit" 
-            startIcon={<Home />}
-            onClick={() => navigate('/')}
-            className="hidden sm:flex"
-          >
-            Home
-          </Button>
-
-          <Button 
-            color="inherit" 
-            startIcon={<Inventory />}
-            onClick={() => navigate('/products')}
-          >
-            Products
-          </Button>
-
-          {/* Shopping Cart */}
-          <IconButton
-            color="inherit"
-            onClick={() => navigate('/cart')}
-            aria-label={`shopping cart${itemCount > 0 ? ` with ${itemCount} items` : ''}`}
-          >
-            <Badge badgeContent={itemCount} color="error">
-              <ShoppingCart />
-            </Badge>
-          </IconButton>
-
-          {/* User Authentication */}
-          {isAuthenticated && user ? (
-            <UserMenu color="inherit" />
-          ) : (
-            <Button
-              color="inherit"
-              onClick={() => navigate('/login')}
-              variant="outlined"
-              size="small"
+      <header className="bg-white border-b border-walgreens-blue/20 shadow-sm">
+        <div className="container mx-auto px-4">
+          <div className="flex items-center justify-between h-16">
+            {/* Logo */}
+            <h1 
+              className="text-2xl font-bold text-walgreens-red cursor-pointer hover:text-walgreens-red/80 transition-colors"
+              onClick={() => navigate('/')}
             >
-              Sign In
-            </Button>
-          )}
-        </Toolbar>
-      </AppBar>
+              Walgreens POC
+            </h1>
+
+            {/* Navigation Links */}
+            <nav className="hidden md:flex items-center space-x-6">
+              <Button 
+                variant="ghost" 
+                onClick={() => navigate('/')}
+                className="text-walgreens-blue hover:text-walgreens-red hover:bg-walgreens-light-blue/20"
+              >
+                <Home className="w-4 h-4 mr-2" />
+                Home
+              </Button>
+
+              <Button 
+                variant="ghost" 
+                onClick={() => navigate('/products')}
+                className="text-walgreens-blue hover:text-walgreens-red hover:bg-walgreens-light-blue/20"
+              >
+                <Package className="w-4 h-4 mr-2" />
+                Products
+              </Button>
+            </nav>
+
+            {/* Right Side Actions */}
+            <div className="flex items-center space-x-4">
+              {/* Shopping Cart */}
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={() => navigate('/cart')}
+                className="relative text-walgreens-blue hover:text-walgreens-red hover:bg-walgreens-light-blue/20"
+              >
+                <ShoppingCart className="w-5 h-5" />
+                {itemCount > 0 && (
+                  <Badge 
+                    variant="destructive" 
+                    className="absolute -top-2 -right-2 h-5 w-5 flex items-center justify-center p-0 text-xs bg-walgreens-red"
+                  >
+                    {itemCount}
+                  </Badge>
+                )}
+              </Button>
+
+              {/* User Authentication */}
+              {isAuthenticated && user ? (
+                <UserMenu />
+              ) : (
+                <Button
+                  onClick={() => navigate('/login')}
+                  variant="outline"
+                  size="sm"
+                  className="border-walgreens-red text-walgreens-red hover:bg-walgreens-red hover:text-white"
+                >
+                  <User className="w-4 h-4 mr-2" />
+                  Sign In
+                </Button>
+              )}
+            </div>
+          </div>
+        </div>
+      </header>
 
       {/* Main Content Area */}
-      <main>
+      <main className="flex-1">
         {children}
       </main>
 
       {/* Footer */}
-      <footer className="bg-muted mt-12">
-        <Container maxWidth="lg" className="py-8">
+      <footer className="bg-walgreens-blue text-white mt-12">
+        <div className="container mx-auto px-4 py-8">
           <div className="text-center">
-            <Typography variant="body2" color="textSecondary">
+            <p className="text-sm opacity-90">
               © 2024 Walgreens POC. Built with clean architecture principles.
-            </Typography>
+            </p>
             {user?.role === 'admin' && (
-              <Typography variant="caption" color="primary" className="block mt-2">
+              <p className="text-walgreens-teal text-sm mt-2 font-medium">
                 Admin Access Available
-              </Typography>
+              </p>
             )}
           </div>
-        </Container>
+        </div>
       </footer>
     </div>
   );
