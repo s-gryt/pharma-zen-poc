@@ -4,7 +4,7 @@ import { ThemeProvider } from '@mui/material/styles';
 import { CssBaseline } from '@mui/material';
 import { BrowserRouter } from 'react-router-dom';
 import { Toaster } from 'sonner';
-import { AuthProvider } from './providers/AuthProvider';
+import { AuthProvider, CartProvider } from './providers';
 import { AppRouter } from './router/AppRouter';
 import { theme } from './theme/muiTheme';
 import { ErrorBoundary } from '@/shared/components/ui';
@@ -58,13 +58,15 @@ const App: React.FC = () => {
           <ThemeProvider theme={theme}>
             <CssBaseline />
             <AuthProvider>
-              <Toaster 
-                position="top-right"
-                richColors
-                closeButton
-                duration={4000}
-              />
-              <AppRouter />
+              <CartProvider>
+                <Toaster 
+                  position="top-right"
+                  richColors
+                  closeButton
+                  duration={4000}
+                />
+                <AppRouter />
+              </CartProvider>
             </AuthProvider>
           </ThemeProvider>
         </BrowserRouter>

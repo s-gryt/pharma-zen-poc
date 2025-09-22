@@ -12,6 +12,7 @@ import { ShoppingCart, Home, Inventory } from '@mui/icons-material';
 import { useNavigate } from 'react-router-dom';
 import { UserMenu } from '@/shared/components/navigation/UserMenu';
 import { useAuth } from '@/app/providers/AuthProvider';
+import { useCart } from '@/app/providers/CartProvider';
 
 /**
  * Customer layout props interface
@@ -34,9 +35,7 @@ interface CustomerLayoutProps {
 export const CustomerLayout: React.FC<CustomerLayoutProps> = ({ children }) => {
   const navigate = useNavigate();
   const { isAuthenticated, user } = useAuth();
-
-  // TODO: Replace with actual cart item count from cart state
-  const cartItemCount = 0;
+  const { itemCount } = useCart();
 
   return (
     <div className="min-h-screen bg-background">
@@ -83,9 +82,9 @@ export const CustomerLayout: React.FC<CustomerLayoutProps> = ({ children }) => {
           <IconButton
             color="inherit"
             onClick={() => navigate('/cart')}
-            aria-label={`shopping cart${cartItemCount > 0 ? ` with ${cartItemCount} items` : ''}`}
+            aria-label={`shopping cart${itemCount > 0 ? ` with ${itemCount} items` : ''}`}
           >
-            <Badge badgeContent={cartItemCount} color="error">
+            <Badge badgeContent={itemCount} color="error">
               <ShoppingCart />
             </Badge>
           </IconButton>
