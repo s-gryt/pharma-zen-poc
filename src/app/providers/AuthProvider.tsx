@@ -61,7 +61,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
    * Initialize authentication state from localStorage
    */
   useEffect(() => {
-    const initializeAuth = async () => {
+    const initializeAuth = () => {
       try {
         // Restore session from localStorage without calling mock API
         if (authToken && userData) {
@@ -74,8 +74,10 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
       }
     };
 
-    initializeAuth();
-  }, [authToken, userData]);
+    // Use a timeout to ensure localStorage is fully loaded
+    const timer = setTimeout(initializeAuth, 0);
+    return () => clearTimeout(timer);
+  }, []);
 
   /**
    * Login user with email and password

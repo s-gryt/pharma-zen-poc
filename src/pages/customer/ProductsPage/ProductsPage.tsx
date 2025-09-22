@@ -1,7 +1,8 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { Container, Typography, Button, Paper, Alert } from '@mui/material';
+import { useSearchParams, useNavigate } from 'react-router-dom';
 import { CustomerLayout } from '../components/CustomerLayout';
-import { ProductCard } from '../components/ProductCard';
+import { CompactProductCard } from '../components/CompactProductCard';
 import { ProductFilters } from '../components/ProductFilters';
 import { mockProductsApi, Product, ProductCategory } from '@/shared/lib/api';
 import { LoadingSpinner } from '@/shared/components/ui/LoadingSpinner';
@@ -16,12 +17,26 @@ import { LoadingSpinner } from '@/shared/components/ui/LoadingSpinner';
  * - Loading states and error handling
  */
 const ProductsPage: React.FC = () => {
+  const [searchParams, setSearchParams] = useSearchParams();
   const [searchTerm, setSearchTerm] = useState<string>('');
   const [selectedCategory, setSelectedCategory] = useState<ProductCategory | ''>('');
   const [debouncedSearch, setDebouncedSearch] = useState<string>('');
   const [products, setProducts] = useState<Product[] | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
+
+  // Initialize from URL params
+  useEffect(() => {
+    const categoryParam = searchParams.get('category') as ProductCategory | null;
+    const searchParam = searchParams.get('search') || '';
+    
+    if (categoryParam && ['pharmacy', 'health', 'personal-care'].includes(categoryParam)) {
+      setSelectedCategory(categoryParam);
+    }
+    if (searchParam) {
+      setSearchTerm(searchParam);
+    }
+  }, [searchParams]);
 
   // Debounce search input
   useEffect(() => {
@@ -118,9 +133,9 @@ const ProductsPage: React.FC = () => {
               Showing {products.length} product{products.length !== 1 ? 's' : ''}
             </Typography>
             
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4">
               {products.map((product) => (
-                <ProductCard
+                <CompactProductCard
                   key={product.id}
                   product={product}
                   onViewDetails={handleViewDetails}

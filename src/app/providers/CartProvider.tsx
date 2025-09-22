@@ -59,7 +59,7 @@ export const CartProvider: React.FC<CartProviderProps> = ({ children }) => {
     } else {
       setCart(null);
     }
-  }, [isAuthenticated, user]);
+  }, [isAuthenticated, user?.id, user?.role]);
 
   /**
    * Refresh cart data from API
