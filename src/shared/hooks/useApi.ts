@@ -7,7 +7,8 @@
  * @fileoverview Generic API interaction hook
  */
 
-import { useState, useCallback } from 'react';
+import { useState, useCallback, useEffect } from 'react';
+import * as React from 'react';
 import { ApiResponse, ApiClientError } from '../lib/api';
 
 /**
@@ -94,6 +95,7 @@ export const useApi = <T>(
 
         return response.data;
       } catch (error) {
+        console.error('API call failed:', error);
         const errorMessage = error instanceof ApiClientError 
           ? error.message 
           : error instanceof Error 
@@ -102,6 +104,7 @@ export const useApi = <T>(
 
         // Retry logic
         if (attempt < retries) {
+          console.log(`Retrying API call, attempt ${attempt + 1}/${retries}`);
           await new Promise(resolve => setTimeout(resolve, retryDelay));
           return executeWithRetry(attempt + 1);
         }
@@ -118,6 +121,14 @@ export const useApi = <T>(
     },
     [apiCall, retries, retryDelay]
   );
+
+  // Execute immediately if requested
+  React.useEffect(() => {
+    if (immediate) {
+      console.log('Executing API call immediately');
+      executeWithRetry();
+    }
+  }, [immediate, executeWithRetry]);
 
   /**
    * Reset hook state

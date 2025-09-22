@@ -1,9 +1,8 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { Container, Typography, Button, Paper, Alert } from '@mui/material';
 import { CustomerLayout } from '../components/CustomerLayout';
 import { ProductCard } from '../components/ProductCard';
 import { ProductFilters } from '../components/ProductFilters';
-import { useApi } from '@/shared/hooks/useApi';
 import { mockProductsApi, Product, ProductCategory } from '@/shared/lib/api';
 import { LoadingSpinner } from '@/shared/components/ui/LoadingSpinner';
 
@@ -20,6 +19,9 @@ const ProductsPage: React.FC = () => {
   const [searchTerm, setSearchTerm] = useState<string>('');
   const [selectedCategory, setSelectedCategory] = useState<ProductCategory | ''>('');
   const [debouncedSearch, setDebouncedSearch] = useState<string>('');
+  const [products, setProducts] = useState<Product[] | null>(null);
+  const [loading, setLoading] = useState<boolean>(true);
+  const [error, setError] = useState<string | null>(null);
 
   // Debounce search input
   useEffect(() => {
@@ -30,24 +32,37 @@ const ProductsPage: React.FC = () => {
     return () => clearTimeout(timer);
   }, [searchTerm]);
 
-  // Fetch products with filters
-  const {
-    data: products,
-    loading,
-    error,
-    execute: refetchProducts
-  } = useApi(
-    () => mockProductsApi.getProducts({
-      category: selectedCategory || undefined,
-      search: debouncedSearch || undefined,
-    }),
-    { immediate: true }
-  );
+  // Fetch products function
+  const fetchProducts = useCallback(async () => {
+    try {
+      setLoading(true);
+      setError(null);
+      console.log('Fetching products with params:', { 
+        category: selectedCategory || undefined, 
+        search: debouncedSearch || undefined 
+      });
+      
+      const response = await mockProductsApi.getProducts({
+        category: selectedCategory || undefined,
+        search: debouncedSearch || undefined,
+      });
+      
+      console.log('Products fetched successfully:', response.data.length);
+      setProducts(response.data);
+    } catch (err) {
+      const errorMessage = err instanceof Error ? err.message : 'Failed to load products';
+      console.error('Failed to fetch products:', err);
+      setError(errorMessage);
+      setProducts(null);
+    } finally {
+      setLoading(false);
+    }
+  }, [selectedCategory, debouncedSearch]);
 
-  // Refetch when filters change
+  // Fetch products on mount and when filters change
   useEffect(() => {
-    refetchProducts();
-  }, [selectedCategory, debouncedSearch, refetchProducts]);
+    fetchProducts();
+  }, [fetchProducts]);
 
   const handleClearFilters = () => {
     setSearchTerm('');
@@ -66,7 +81,7 @@ const ProductsPage: React.FC = () => {
           <Alert severity="error" className="mb-4">
             Failed to load products: {error}
           </Alert>
-          <Button onClick={refetchProducts} variant="contained">
+          <Button onClick={fetchProducts} variant="contained">
             Try Again
           </Button>
         </Container>

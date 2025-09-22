@@ -363,6 +363,7 @@ export const mockProductsApi = {
     category?: ProductCategory;
     search?: string;
   }): Promise<ApiResponse<Product[]>> {
+    console.log('mockProductsApi.getProducts called with params:', params);
     await delay();
 
     let filteredProducts = [...mockProducts];
@@ -379,6 +380,7 @@ export const mockProductsApi = {
       );
     }
 
+    console.log('mockProductsApi.getProducts returning:', filteredProducts.length, 'products');
     return createMockResponse(filteredProducts);
   },
 
@@ -648,12 +650,15 @@ export const mockOrdersApi = {
    * Get all orders (Admin only)
    */
   async getAllOrders(): Promise<ApiResponse<Order[]>> {
+    console.log('mockOrdersApi.getAllOrders called');
     await delay();
 
     if (!currentUser || currentUser.role !== 'admin') {
+      console.error('Unauthorized access to getAllOrders');
       throw new Error('Unauthorized');
     }
 
+    console.log('mockOrdersApi.getAllOrders returning:', mockOrders.length, 'orders');
     return createMockResponse([...mockOrders]);
   },
 

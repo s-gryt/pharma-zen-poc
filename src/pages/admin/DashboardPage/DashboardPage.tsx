@@ -1,5 +1,5 @@
-import React from 'react';
-import { Container, Typography, Grid, Paper } from '@mui/material';
+import React, { useState, useEffect } from 'react';
+import { Container, Typography, Grid, Paper, Alert, Button } from '@mui/material';
 import { 
   TrendingUp, 
   Inventory, 
@@ -10,8 +10,7 @@ import {
 } from '@mui/icons-material';
 import { AdminLayout } from '../components/AdminLayout';
 import { MetricCard } from '../components/MetricCard';
-import { useApi } from '@/shared/hooks/useApi';
-import { mockProductsApi, mockOrdersApi } from '@/shared/lib/api';
+import { mockProductsApi, mockOrdersApi, Product, Order } from '@/shared/lib/api';
 import { LoadingSpinner } from '@/shared/components/ui/LoadingSpinner';
 
 /**
@@ -24,18 +23,38 @@ import { LoadingSpinner } from '@/shared/components/ui/LoadingSpinner';
  * - Performance indicators
  */
 const DashboardPage: React.FC = () => {
+  const [products, setProducts] = useState<Product[] | null>(null);
+  const [orders, setOrders] = useState<Order[] | null>(null);
+  const [loading, setLoading] = useState<boolean>(true);
+  const [error, setError] = useState<string | null>(null);
+
   // Fetch dashboard data
-  const { data: products, loading: productsLoading } = useApi(
-    () => mockProductsApi.getProducts(),
-    { immediate: true }
-  );
+  useEffect(() => {
+    const fetchDashboardData = async () => {
+      try {
+        setLoading(true);
+        setError(null);
+        console.log('Fetching dashboard data...');
 
-  const { data: orders, loading: ordersLoading } = useApi(
-    () => mockOrdersApi.getAllOrders(),
-    { immediate: true }
-  );
+        const [productsResponse, ordersResponse] = await Promise.all([
+          mockProductsApi.getProducts(),
+          mockOrdersApi.getAllOrders(),
+        ]);
 
-  const loading = productsLoading || ordersLoading;
+        console.log('Dashboard data fetched successfully');
+        setProducts(productsResponse.data);
+        setOrders(ordersResponse.data);
+      } catch (err) {
+        const errorMessage = err instanceof Error ? err.message : 'Failed to load dashboard data';
+        console.error('Failed to fetch dashboard data:', err);
+        setError(errorMessage);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchDashboardData();
+  }, []);
 
   // Calculate metrics
   const totalProducts = products?.length || 0;
@@ -51,6 +70,21 @@ const DashboardPage: React.FC = () => {
           <div className="flex justify-center py-12">
             <LoadingSpinner size="large" />
           </div>
+        </Container>
+      </AdminLayout>
+    );
+  }
+
+  if (error) {
+    return (
+      <AdminLayout>
+        <Container maxWidth="lg" className="py-8">
+          <Alert severity="error" className="mb-4">
+            Failed to load dashboard: {error}
+          </Alert>
+          <Button onClick={() => window.location.reload()} variant="contained">
+            Retry
+          </Button>
         </Container>
       </AdminLayout>
     );
