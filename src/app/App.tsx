@@ -2,12 +2,12 @@ import React from 'react';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { ThemeProvider } from '@mui/material/styles';
 import { CssBaseline } from '@mui/material';
-import { TooltipProvider } from '@/components/ui/tooltip';
-import { Toaster } from '@/components/ui/toaster';
-import { Toaster as Sonner } from '@/components/ui/sonner';
+import { BrowserRouter } from 'react-router-dom';
+import { Toaster } from 'sonner';
 import { AuthProvider } from './providers/AuthProvider';
 import { AppRouter } from './router/AppRouter';
 import { theme } from './theme/muiTheme';
+import { ErrorBoundary } from '@/shared/components/ui';
 
 /**
  * Query client configuration for React Query
@@ -36,30 +36,40 @@ const queryClient = new QueryClient({
 });
 
 /**
- * Root application component that sets up all global providers
+ * Root application component
  * 
- * Provider hierarchy (outer to inner):
- * 1. QueryClientProvider - React Query for server state
- * 2. ThemeProvider - Material UI theming
- * 3. AuthProvider - Authentication context
- * 4. TooltipProvider - Radix UI tooltips
+ * Sets up the application with all necessary providers and routing.
+ * Follows the provider pattern for clean dependency injection.
  * 
- * @returns The complete application with all providers configured
+ * Provider hierarchy:
+ * 1. ErrorBoundary - Global error handling
+ * 2. QueryClientProvider - React Query for server state
+ * 3. BrowserRouter - Routing context
+ * 4. ThemeProvider - Material UI theming
+ * 5. AuthProvider - Authentication state
+ * 6. Toaster - Global toast notifications
+ * 7. AppRouter - Route definitions and navigation
  */
 const App: React.FC = () => {
   return (
-    <QueryClientProvider client={queryClient}>
-      <ThemeProvider theme={theme}>
-        <CssBaseline />
-        <AuthProvider>
-          <TooltipProvider>
-            <AppRouter />
-            <Toaster />
-            <Sonner />
-          </TooltipProvider>
-        </AuthProvider>
-      </ThemeProvider>
-    </QueryClientProvider>
+    <ErrorBoundary>
+      <QueryClientProvider client={queryClient}>
+        <BrowserRouter>
+          <ThemeProvider theme={theme}>
+            <CssBaseline />
+            <AuthProvider>
+              <Toaster 
+                position="top-right"
+                richColors
+                closeButton
+                duration={4000}
+              />
+              <AppRouter />
+            </AuthProvider>
+          </ThemeProvider>
+        </BrowserRouter>
+      </QueryClientProvider>
+    </ErrorBoundary>
   );
 };
 

@@ -36,7 +36,7 @@ export const AppRouter: React.FC = () => {
   const { isLoading, isAuthenticated, user } = useAuth();
 
   // Show loading spinner during authentication check
-  if (isLoading) {
+  if (loading) {
     return (
       <div className="flex min-h-screen items-center justify-center">
         <LoadingSpinner size="large" />

@@ -4,19 +4,13 @@ import {
   Toolbar,
   Typography,
   Button,
-  Badge,
+  Container,
   IconButton,
-  Menu,
-  MenuItem,
+  Badge,
 } from '@mui/material';
-import {
-  ShoppingCart,
-  AccountCircle,
-  Search,
-  Home,
-  Store,
-} from '@mui/icons-material';
-import { useNavigate, useLocation } from 'react-router-dom';
+import { ShoppingCart, Home, Inventory } from '@mui/icons-material';
+import { useNavigate } from 'react-router-dom';
+import { UserMenu } from '@/shared/components/navigation/UserMenu';
 import { useAuth } from '@/app/providers/AuthProvider';
 
 /**
@@ -27,150 +21,110 @@ interface CustomerLayoutProps {
 }
 
 /**
- * Customer layout component providing consistent navigation and structure
+ * Customer layout component providing customer-specific navigation and structure
  * 
  * Features:
- * - Top navigation bar with logo and menu
- * - User account menu
- * - Shopping cart indicator
- * - Active page highlighting
- * - Responsive design
+ * - Top navigation bar with customer context
+ * - Shopping cart access with item count
+ * - User account menu with authentication state
+ * - Responsive navigation design
+ * - Clean, consumer-friendly interface
+ * - Role-aware navigation options
  */
 export const CustomerLayout: React.FC<CustomerLayoutProps> = ({ children }) => {
   const navigate = useNavigate();
-  const location = useLocation();
-  const { user, logout } = useAuth();
-  const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
+  const { isAuthenticated, user } = useAuth();
 
-  const handleAccountMenuOpen = (event: React.MouseEvent<HTMLElement>): void => {
-    setAnchorEl(event.currentTarget);
-  };
-
-  const handleAccountMenuClose = (): void => {
-    setAnchorEl(null);
-  };
-
-  const handleLogout = (): void => {
-    handleAccountMenuClose();
-    logout();
-    navigate('/login');
-  };
-
-  const navigationItems = [
-    { label: 'Home', path: '/', icon: <Home /> },
-    { label: 'Products', path: '/products', icon: <Store /> },
-  ];
-
-  const isActive = (path: string): boolean => {
-    return location.pathname === path;
-  };
+  // TODO: Replace with actual cart item count from cart state
+  const cartItemCount = 0;
 
   return (
     <div className="min-h-screen bg-background">
-      {/* Navigation Bar */}
+      {/* Top Navigation Bar */}
       <AppBar 
         position="static" 
         elevation={1}
-        sx={{ backgroundColor: 'var(--card)', color: 'var(--card-foreground)' }}
+        sx={{ 
+          backgroundColor: 'var(--card)', 
+          color: 'var(--card-foreground)' 
+        }}
       >
         <Toolbar>
           {/* Logo */}
-          <Typography
-            variant="h6"
-            component="div"
-            className="cursor-pointer"
+          <Typography 
+            variant="h6" 
+            component="div" 
+            sx={{ flexGrow: 1, cursor: 'pointer' }}
             onClick={() => navigate('/')}
-            sx={{ flexGrow: 0, mr: 4 }}
+            className="font-semibold"
           >
             Walgreens POC
           </Typography>
 
-          {/* Navigation Items */}
-          <div className="flex-1 flex space-x-4">
-            {navigationItems.map((item) => (
-              <Button
-                key={item.path}
-                startIcon={item.icon}
-                onClick={() => navigate(item.path)}
-                variant={isActive(item.path) ? 'contained' : 'text'}
-                size="medium"
-              >
-                {item.label}
-              </Button>
-            ))}
-          </div>
+          {/* Navigation Links */}
+          <Button 
+            color="inherit" 
+            startIcon={<Home />}
+            onClick={() => navigate('/')}
+            className="hidden sm:flex"
+          >
+            Home
+          </Button>
 
-          {/* Right Side Actions */}
-          <div className="flex items-center space-x-2">
-            {/* Search Button */}
-            <IconButton
+          <Button 
+            color="inherit" 
+            startIcon={<Inventory />}
+            onClick={() => navigate('/products')}
+          >
+            Products
+          </Button>
+
+          {/* Shopping Cart */}
+          <IconButton
+            color="inherit"
+            onClick={() => navigate('/cart')}
+            aria-label={`shopping cart${cartItemCount > 0 ? ` with ${cartItemCount} items` : ''}`}
+          >
+            <Badge badgeContent={cartItemCount} color="error">
+              <ShoppingCart />
+            </Badge>
+          </IconButton>
+
+          {/* User Authentication */}
+          {isAuthenticated && user ? (
+            <UserMenu color="inherit" />
+          ) : (
+            <Button
               color="inherit"
-              onClick={() => navigate('/products')}
-              aria-label="search products"
+              onClick={() => navigate('/login')}
+              variant="outlined"
+              size="small"
             >
-              <Search />
-            </IconButton>
-
-            {/* Shopping Cart */}
-            <IconButton
-              color="inherit"
-              onClick={() => navigate('/cart')}
-              aria-label="shopping cart"
-            >
-              <Badge badgeContent={0} color="error">
-                <ShoppingCart />
-              </Badge>
-            </IconButton>
-
-            {/* User Account Menu */}
-            <div>
-              <IconButton
-                color="inherit"
-                onClick={handleAccountMenuOpen}
-                aria-label="user account"
-                aria-controls="account-menu"
-                aria-haspopup="true"
-              >
-                <AccountCircle />
-              </IconButton>
-              <Menu
-                id="account-menu"
-                anchorEl={anchorEl}
-                open={Boolean(anchorEl)}
-                onClose={handleAccountMenuClose}
-                MenuListProps={{
-                  'aria-labelledby': 'account-button',
-                }}
-              >
-                <MenuItem disabled>
-                  <Typography variant="body2">
-                    {user?.firstName} {user?.lastName}
-                  </Typography>
-                </MenuItem>
-                <MenuItem disabled>
-                  <Typography variant="caption" color="textSecondary">
-                    {user?.email}
-                  </Typography>
-                </MenuItem>
-                <MenuItem onClick={handleLogout}>
-                  Logout
-                </MenuItem>
-              </Menu>
-            </div>
-          </div>
+              Sign In
+            </Button>
+          )}
         </Toolbar>
       </AppBar>
 
-      {/* Main Content */}
-      <main>{children}</main>
+      {/* Main Content Area */}
+      <main>
+        {children}
+      </main>
 
       {/* Footer */}
-      <footer className="bg-card text-card-foreground py-8 mt-16">
-        <div className="container mx-auto px-4 text-center">
-          <Typography variant="body2" color="textSecondary">
-            © 2025 Walgreens POC. This is a demonstration application.
-          </Typography>
-        </div>
+      <footer className="bg-muted mt-12">
+        <Container maxWidth="lg" className="py-8">
+          <div className="text-center">
+            <Typography variant="body2" color="textSecondary">
+              © 2024 Walgreens POC. Built with clean architecture principles.
+            </Typography>
+            {user?.role === 'admin' && (
+              <Typography variant="caption" color="primary" className="block mt-2">
+                Admin Access Available
+              </Typography>
+            )}
+          </div>
+        </Container>
       </footer>
     </div>
   );

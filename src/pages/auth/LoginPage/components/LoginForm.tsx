@@ -1,177 +1,128 @@
-import React, { useState, useCallback } from 'react';
-import {
-  TextField,
-  Button,
-  Alert,
-  InputAdornment,
-  IconButton,
-} from '@mui/material';
-import { Visibility, VisibilityOff, Email, Lock } from '@mui/icons-material';
-import { useAuth } from '@/app/providers/AuthProvider';
-import { LoadingSpinner } from '@/shared/components/ui/LoadingSpinner';
+import React from 'react';
+import { useForm } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { z } from 'zod';
+import { Paper, Typography, Box, Alert } from '@mui/material';
+import { LoadingButton } from '@mui/lab';
+import { FormField } from '@/shared/components/ui';
 
 /**
- * Login form state interface
+ * Login form validation schema
  */
-interface LoginFormState {
-  readonly email: string;
-  readonly password: string;
-  readonly showPassword: boolean;
+const loginSchema = z.object({
+  email: z
+    .string()
+    .min(1, 'Email is required')
+    .email('Please enter a valid email address'),
+  password: z
+    .string()
+    .min(1, 'Password is required')
+    .min(6, 'Password must be at least 6 characters'),
+});
+
+/**
+ * Login form data interface
+ */
+type LoginFormData = z.infer<typeof loginSchema>;
+
+/**
+ * Login form props interface
+ */
+interface LoginFormProps {
+  readonly onSubmit: (data: LoginFormData) => Promise<boolean>;
+  readonly loading?: boolean;
 }
 
 /**
- * Initial form state
- */
-const initialState: LoginFormState = {
-  email: '',
-  password: '',
-  showPassword: false,
-};
-
-/**
- * Login form component with validation and error handling
+ * Login form component
+ * 
+ * Provides a clean, accessible login form with validation
+ * and error handling for user authentication.
  * 
  * Features:
- * - Email and password validation
- * - Password visibility toggle
+ * - Form validation with Zod schema validation
+ * - Material UI design consistency
  * - Loading states during authentication
- * - Error display for failed attempts
- * - Keyboard navigation support
+ * - Error handling and user feedback
+ * - Accessibility compliance
+ * - Demo credentials helper
  */
-export const LoginForm: React.FC = () => {
-  const [formState, setFormState] = useState<LoginFormState>(initialState);
-  const { login, isLoading, error } = useAuth();
+export const LoginForm: React.FC<LoginFormProps> = ({ onSubmit, loading = false }) => {
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+    setError,
+  } = useForm<LoginFormData>({
+    resolver: zodResolver(loginSchema),
+  });
 
-  /**
-   * Updates form field values
-   */
-  const updateField = useCallback((field: keyof LoginFormState) => 
-    (event: React.ChangeEvent<HTMLInputElement>): void => {
-      setFormState(prev => ({
-        ...prev,
-        [field]: event.target.value,
-      }));
-    }, []
-  );
-
-  /**
-   * Toggles password visibility
-   */
-  const togglePasswordVisibility = useCallback((): void => {
-    setFormState(prev => ({
-      ...prev,
-      showPassword: !prev.showPassword,
-    }));
-  }, []);
-
-  /**
-   * Handles form submission
-   */
-  const handleSubmit = useCallback(async (event: React.FormEvent): Promise<void> => {
-    event.preventDefault();
+  const handleFormSubmit = async (data: LoginFormData): Promise<void> => {
+    const success = await onSubmit(data);
     
-    if (!formState.email.trim() || !formState.password.trim()) {
-      return;
+    if (!success) {
+      setError('root', {
+        type: 'manual',
+        message: 'Invalid email or password. Please try again.',
+      });
     }
-
-    try {
-      await login(formState.email.trim(), formState.password);
-    } catch (error) {
-      // Error is handled by AuthProvider and displayed via context
-      console.error('Login failed:', error);
-    }
-  }, [formState.email, formState.password, login]);
-
-  /**
-   * Validates email format
-   */
-  const isEmailValid = useCallback((email: string): boolean => {
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    return email.length === 0 || emailRegex.test(email);
-  }, []);
-
-  /**
-   * Checks if form is valid for submission
-   */
-  const isFormValid = formState.email.trim().length > 0 && 
-                     formState.password.length > 0 && 
-                     isEmailValid(formState.email);
+  };
 
   return (
-    <form onSubmit={handleSubmit} noValidate>
-      {error && (
-        <Alert severity="error" className="mb-4">
-          {error}
-        </Alert>
-      )}
-
-      <div className="space-y-4">
-        <TextField
-          fullWidth
-          type="email"
+    <Paper elevation={3} className="p-8 max-w-md mx-auto">
+      <Typography variant="h4" component="h1" className="mb-6 text-center">
+        Sign In to Walgreens
+      </Typography>
+      
+      {/* Demo Credentials Alert */}
+      <Alert severity="info" className="mb-4">
+        <Typography variant="body2" className="mb-2">
+          <strong>Demo Credentials:</strong>
+        </Typography>
+        <Typography variant="body2" component="div">
+          <strong>Admin:</strong> admin@walgreens.com / admin123<br />
+          <strong>Customer:</strong> customer@example.com / customer123
+        </Typography>
+      </Alert>
+      
+      <Box component="form" onSubmit={handleSubmit(handleFormSubmit)} noValidate>
+        {/* Root error display */}
+        {errors.root && (
+          <Alert severity="error" className="mb-4">
+            {errors.root.message}
+          </Alert>
+        )}
+        
+        <FormField
           label="Email Address"
-          value={formState.email}
-          onChange={updateField('email')}
-          error={formState.email.length > 0 && !isEmailValid(formState.email)}
-          helperText={
-            formState.email.length > 0 && !isEmailValid(formState.email)
-              ? 'Please enter a valid email address'
-              : ''
-          }
-          InputProps={{
-            startAdornment: (
-              <InputAdornment position="start">
-                <Email />
-              </InputAdornment>
-            ),
-          }}
-          autoComplete="email"
+          type="email"
           required
-          disabled={isLoading}
+          error={errors.email?.message}
+          registration={register('email')}
+          className="mb-4"
         />
-
-        <TextField
-          fullWidth
-          type={formState.showPassword ? 'text' : 'password'}
+        
+        <FormField
           label="Password"
-          value={formState.password}
-          onChange={updateField('password')}
-          InputProps={{
-            startAdornment: (
-              <InputAdornment position="start">
-                <Lock />
-              </InputAdornment>
-            ),
-            endAdornment: (
-              <InputAdornment position="end">
-                <IconButton
-                  aria-label="toggle password visibility"
-                  onClick={togglePasswordVisibility}
-                  edge="end"
-                  disabled={isLoading}
-                >
-                  {formState.showPassword ? <VisibilityOff /> : <Visibility />}
-                </IconButton>
-              </InputAdornment>
-            ),
-          }}
-          autoComplete="current-password"
+          type="password"
           required
-          disabled={isLoading}
+          error={errors.password?.message}
+          registration={register('password')}
+          className="mb-6"
         />
-
-        <Button
+        
+        <LoadingButton
           type="submit"
           fullWidth
           variant="contained"
           size="large"
-          disabled={!isFormValid || isLoading}
-          className="mt-6"
-          startIcon={isLoading ? <LoadingSpinner size="small" /> : undefined}
+          loading={loading}
+          loadingIndicator="Signing In..."
+          className="mt-4"
         >
-          {isLoading ? 'Signing In...' : 'Sign In'}
-        </Button>
-      </div>
-    </form>
+          Sign In
+        </LoadingButton>
+      </Box>
+    </Paper>
   );
 };
