@@ -1,4 +1,4 @@
-# Feature Sliced Design (FSD) Implementation Guide
+# TSD-001: Technical Architecture - Feature Sliced Design Implementation
 
 ## Overview
 Feature Sliced Design is a frontend architecture methodology focusing on business logic organization and scalable code structure.

@@ -1,4 +1,4 @@
-# Architecture Decision Records (ADRs)
+# ARD-001: Architecture Decision Records
 
 ## ADR-001: Feature Sliced Design Architecture
 
