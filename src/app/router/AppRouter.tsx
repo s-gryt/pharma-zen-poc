@@ -33,7 +33,7 @@ const NotFoundPage = React.lazy(() => import('@/pages/common/NotFoundPage'));
  * - /admin/* - Admin routes (admin-only)
  */
 export const AppRouter: React.FC = () => {
-  const { isLoading, isAuthenticated, user } = useAuth();
+  const { loading, isAuthenticated, user } = useAuth();
 
   // Show loading spinner during authentication check
   if (loading) {
