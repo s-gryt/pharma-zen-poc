@@ -97,17 +97,16 @@ export const AdminLayout: React.FC<AdminLayoutProps> = ({ children }) => {
           {navigationItems.map((item) => (
             <ListItem
               key={item.path}
-              component="div"
               onClick={() => navigate(item.path)}
-              selected={isActive(item.path)}
-              sx={{ cursor: 'pointer' }}
-              sx={{
-                '&.Mui-selected': {
-                  backgroundColor: 'var(--primary)',
-                  color: 'var(--primary-foreground)',
-                  '& .MuiListItemIcon-root': {
-                    color: 'var(--primary-foreground)',
-                  },
+              sx={{ 
+                cursor: 'pointer',
+                backgroundColor: isActive(item.path) ? 'var(--primary)' : 'transparent',
+                color: isActive(item.path) ? 'var(--primary-foreground)' : 'inherit',
+                '& .MuiListItemIcon-root': {
+                  color: isActive(item.path) ? 'var(--primary-foreground)' : 'inherit',
+                },
+                '&:hover': {
+                  backgroundColor: isActive(item.path) ? 'var(--primary)' : 'var(--muted)',
                 },
               }}
             >

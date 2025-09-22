@@ -1,5 +1,5 @@
 import React from 'react';
-import { Container, Typography, Button, Grid, Card, CardContent } from '@mui/material';
+import { Container, Typography, Button, Card, CardContent } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 import { ShoppingCart, LocalPharmacy, HealthAndSafety, Person } from '@mui/icons-material';
 import { CustomerLayout } from '../components/CustomerLayout';
@@ -73,9 +73,9 @@ const HomePage: React.FC = () => {
           Shop by Category
         </Typography>
         
-        <Grid container spacing={4} className="mb-12">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
           {categories.map((category) => (
-            <Grid xs={12} md={4} key={category.title}>
+            <div key={category.title}>
               <Card 
                 className="h-full cursor-pointer transition-transform hover:scale-105"
                 onClick={() => navigate(category.path)}
@@ -95,9 +95,9 @@ const HomePage: React.FC = () => {
                   </Button>
                 </CardContent>
               </Card>
-            </Grid>
+            </div>
           ))}
-        </Grid>
+        </div>
 
         {/* Features Section */}
         <Card className="bg-secondary">
@@ -105,32 +105,32 @@ const HomePage: React.FC = () => {
             <Typography variant="h4" component="h2" className="mb-4">
               Why Choose Walgreens?
             </Typography>
-            <Grid container spacing={4}>
-              <Grid xs={12} md={4}>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+              <div>
                 <Typography variant="h6" gutterBottom>
                   Trusted Quality
                 </Typography>
                 <Typography variant="body2" color="textSecondary">
                   Over 100 years of healthcare expertise and trusted products
                 </Typography>
-              </Grid>
-              <Grid xs={12} md={4}>
+              </div>
+              <div>
                 <Typography variant="h6" gutterBottom>
                   Convenient Shopping
                 </Typography>
                 <Typography variant="body2" color="textSecondary">
                   Easy online ordering with in-store pickup and delivery options
                 </Typography>
-              </Grid>
-              <Grid xs={12} md={4}>
+              </div>
+              <div>
                 <Typography variant="h6" gutterBottom>
                   Expert Care
                 </Typography>
                 <Typography variant="body2" color="textSecondary">
                   Professional pharmacists and healthcare consultations
                 </Typography>
-              </Grid>
-            </Grid>
+              </div>
+            </div>
           </CardContent>
         </Card>
       </Container>
