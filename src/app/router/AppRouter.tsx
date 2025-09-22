@@ -1,5 +1,5 @@
 import React from 'react';
-import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
+import { Routes, Route, Navigate } from 'react-router-dom';
 import { useAuth } from '../providers/AuthProvider';
 import { ProtectedRoute } from './ProtectedRoute';
 import { LoadingSpinner } from '@/shared/components/ui/LoadingSpinner';
@@ -45,95 +45,93 @@ export const AppRouter: React.FC = () => {
   }
 
   return (
-    <BrowserRouter>
-      <React.Suspense 
-        fallback={
-          <div className="flex min-h-screen items-center justify-center">
-            <LoadingSpinner size="medium" />
-          </div>
-        }
-      >
-        <Routes>
-          {/* Public Routes */}
-          <Route 
-            path="/login" 
-            element={
-              isAuthenticated ? 
-                <Navigate to={user?.role === 'admin' ? '/admin' : '/'} replace /> : 
-                <LoginPage />
-            } 
-          />
+    <React.Suspense 
+      fallback={
+        <div className="flex min-h-screen items-center justify-center">
+          <LoadingSpinner size="medium" />
+        </div>
+      }
+    >
+      <Routes>
+        {/* Public Routes */}
+        <Route 
+          path="/login" 
+          element={
+            isAuthenticated ? 
+              <Navigate to={user?.role === 'admin' ? '/admin' : '/'} replace /> : 
+              <LoginPage />
+          } 
+        />
 
-          {/* Protected Customer Routes */}
-          <Route
-            path="/"
-            element={
-              <ProtectedRoute requiredRole="customer">
-                <HomePage />
-              </ProtectedRoute>
-            }
-          />
-          
-          <Route
-            path="/products"
-            element={
-              <ProtectedRoute requiredRole="customer">
-                <ProductsPage />
-              </ProtectedRoute>
-            }
-          />
-          
-          <Route
-            path="/cart"
-            element={
-              <ProtectedRoute requiredRole="customer">
-                <CartPage />
-              </ProtectedRoute>
-            }
-          />
-          
-          <Route
-            path="/checkout"
-            element={
-              <ProtectedRoute requiredRole="customer">
-                <CheckoutPage />
-              </ProtectedRoute>
-            }
-          />
+        {/* Protected Customer Routes */}
+        <Route
+          path="/"
+          element={
+            <ProtectedRoute requiredRole="customer">
+              <HomePage />
+            </ProtectedRoute>
+          }
+        />
+        
+        <Route
+          path="/products"
+          element={
+            <ProtectedRoute requiredRole="customer">
+              <ProductsPage />
+            </ProtectedRoute>
+          }
+        />
+        
+        <Route
+          path="/cart"
+          element={
+            <ProtectedRoute requiredRole="customer">
+              <CartPage />
+            </ProtectedRoute>
+          }
+        />
+        
+        <Route
+          path="/checkout"
+          element={
+            <ProtectedRoute requiredRole="customer">
+              <CheckoutPage />
+            </ProtectedRoute>
+          }
+        />
 
-          {/* Protected Admin Routes */}
-          <Route
-            path="/admin"
-            element={
-              <ProtectedRoute requiredRole="admin">
-                <AdminDashboardPage />
-              </ProtectedRoute>
-            }
-          />
-          
-          <Route
-            path="/admin/products"
-            element={
-              <ProtectedRoute requiredRole="admin">
-                <AdminProductsPage />
-              </ProtectedRoute>
-            }
-          />
-          
-          <Route
-            path="/admin/orders"
-            element={
-              <ProtectedRoute requiredRole="admin">
-                <AdminOrdersPage />
-              </ProtectedRoute>
-            }
-          />
+        {/* Protected Admin Routes */}
+        <Route
+          path="/admin"
+          element={
+            <ProtectedRoute requiredRole="admin">
+              <AdminDashboardPage />
+            </ProtectedRoute>
+          }
+        />
+        
+        <Route
+          path="/admin/products"
+          element={
+            <ProtectedRoute requiredRole="admin">
+              <AdminProductsPage />
+            </ProtectedRoute>
+          }
+        />
+        
+        <Route
+          path="/admin/orders"
+          element={
+            <ProtectedRoute requiredRole="admin">
+              <AdminOrdersPage />
+            </ProtectedRoute>
+          }
+        />
 
-          {/* Fallback Routes */}
-          <Route path="/404" element={<NotFoundPage />} />
-          <Route path="*" element={<Navigate to="/404" replace />} />
-        </Routes>
-      </React.Suspense>
-    </BrowserRouter>
+        {/* Fallback Routes */}
+        <Route path="/404" element={<NotFoundPage />} />
+        <Route path="*" element={<Navigate to="/404" replace />} />
+      </Routes>
+    </React.Suspense>
   );
 };
