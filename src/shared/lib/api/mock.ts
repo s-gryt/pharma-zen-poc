@@ -43,6 +43,11 @@ const createMockResponse = <T>(data: T): ApiResponse<T> => ({
 });
 
 /**
+ * Generate unique ID for mock entities
+ */
+const generateId = (): string => `mock-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
+
+/**
  * Mock data storage (simulates database)
  */
 let mockUsers: User[] = [
@@ -420,15 +425,32 @@ const initializeCurrentUser = () => {
   }
 };
 
+/**
+ * Restore cart from localStorage
+ */
+const restoreCartFromStorage = () => {
+  try {
+    const storedCart = localStorage.getItem('user_cart');
+    if (storedCart && currentUser) {
+      const parsedCart = JSON.parse(storedCart);
+      const existingCartIndex = mockCarts.findIndex(c => c.userId === currentUser!.id);
+      
+      if (existingCartIndex >= 0) {
+        mockCarts[existingCartIndex] = parsedCart;
+      } else {
+        mockCarts.push(parsedCart);
+      }
+    }
+  } catch (error) {
+    console.warn('Failed to restore cart:', error);
+  }
+};
+
 // Initialize on module load
 if (typeof window !== 'undefined') {
   initializeCurrentUser();
+  restoreCartFromStorage();
 }
-
-/**
- * Generate unique ID for mock entities
- */
-const generateId = (): string => `mock-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
 
 /**
  * Mock Authentication API
@@ -458,6 +480,10 @@ export const mockAuthApi = {
 
     currentUser = user;
 
+    // Store in localStorage for persistence
+    localStorage.setItem('auth_token', JSON.stringify(`mock-token-${user.id}`));
+    localStorage.setItem('user_data', JSON.stringify(user));
+
     return createMockResponse({
       user,
       token: `mock-token-${user.id}`,
@@ -471,6 +497,9 @@ export const mockAuthApi = {
   async logout(): Promise<ApiResponse<void>> {
     await delay();
     currentUser = null;
+    localStorage.removeItem('auth_token');
+    localStorage.removeItem('user_data');
+    localStorage.removeItem('user_cart');
     return createMockResponse(undefined);
   },
 
@@ -685,9 +714,10 @@ export const mockCartApi = {
       updatedAt: new Date().toISOString(),
     };
 
-    // Update mock data
+    // Update mock data and localStorage
     const cartIndex = mockCarts.findIndex(c => c.id === cart.id);
     mockCarts[cartIndex] = cart;
+    localStorage.setItem('user_cart', JSON.stringify(cart));
 
     return createMockResponse(cart);
   },
@@ -721,6 +751,7 @@ export const mockCartApi = {
 
     const cartIndex = mockCarts.findIndex(c => c.id === cart.id);
     mockCarts[cartIndex] = updatedCart;
+    localStorage.setItem('user_cart', JSON.stringify(updatedCart));
 
     return createMockResponse(updatedCart);
   },
@@ -768,6 +799,7 @@ export const mockOrdersApi = {
     const cartIndex = mockCarts.findIndex(c => c.id === cart.id);
     if (cartIndex >= 0) {
       mockCarts.splice(cartIndex, 1);
+      localStorage.removeItem('user_cart');
     }
 
     return createMockResponse(order);
