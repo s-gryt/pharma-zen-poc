@@ -76,7 +76,65 @@ export const AdminLayout: React.FC<AdminLayoutProps> = ({ children }) => {
   };
 
   return (
-    <div className="min-h-screen bg-background flex">
+    <div className="min-h-screen bg-background w-full">
+      {/* Top App Bar - Fixed, Full Width */}
+      <AppBar 
+        position="fixed" 
+        elevation={1}
+        sx={{ 
+          backgroundColor: 'var(--card)', 
+          color: 'var(--card-foreground)',
+          zIndex: (theme) => theme.zIndex.drawer + 1,
+        }}
+      >
+        <Toolbar>
+          {/* Menu Toggle */}
+          <IconButton
+            color="inherit"
+            onClick={toggleDrawer}
+            edge="start"
+            sx={{ mr: 2 }}
+          >
+            <MenuIcon />
+          </IconButton>
+
+          {/* Logo */}
+          <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
+            Walgreens - Admin
+          </Typography>
+
+          {/* User Account Menu */}
+          <div>
+            <IconButton
+              color="inherit"
+              onClick={handleAccountMenuOpen}
+              aria-label="user account"
+            >
+              <AccountCircle />
+            </IconButton>
+            <Menu
+              anchorEl={anchorEl}
+              open={Boolean(anchorEl)}
+              onClose={handleAccountMenuClose}
+            >
+              <MenuItem disabled>
+                <Typography variant="body2">
+                  {user?.firstName} {user?.lastName}
+                </Typography>
+              </MenuItem>
+              <MenuItem disabled>
+                <Typography variant="caption" color="textSecondary">
+                  Administrator
+                </Typography>
+              </MenuItem>
+              <MenuItem onClick={handleLogout}>
+                Logout
+              </MenuItem>
+            </Menu>
+          </div>
+        </Toolbar>
+      </AppBar>
+
       {/* Side Navigation Drawer */}
       <Drawer
         variant="persistent"
@@ -89,10 +147,10 @@ export const AdminLayout: React.FC<AdminLayoutProps> = ({ children }) => {
             boxSizing: 'border-box',
             backgroundColor: 'var(--card)',
             color: 'var(--card-foreground)',
+            marginTop: '64px',
           },
         }}
       >
-        <Toolbar />
         <List>
           {navigationItems.map((item) => (
             <ListItem
@@ -117,79 +175,18 @@ export const AdminLayout: React.FC<AdminLayoutProps> = ({ children }) => {
         </List>
       </Drawer>
 
-      {/* Main Content Area */}
-      <div className="flex-1 flex flex-col">
-        {/* Top App Bar */}
-        <AppBar 
-          position="static" 
-          elevation={1}
-          sx={{ 
-            backgroundColor: 'var(--card)', 
-            color: 'var(--card-foreground)',
-            marginLeft: drawerOpen ? '240px' : 0,
-            width: drawerOpen ? 'calc(100% - 240px)' : '100%',
-            transition: 'margin-left 0.3s, width 0.3s',
-          }}
-        >
-          <Toolbar>
-            {/* Menu Toggle */}
-            <IconButton
-              color="inherit"
-              onClick={toggleDrawer}
-              edge="start"
-              sx={{ mr: 2 }}
-            >
-              <MenuIcon />
-            </IconButton>
-
-            {/* Logo */}
-            <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
-              Walgreens - Admin
-            </Typography>
-
-            {/* User Account Menu */}
-            <div>
-              <IconButton
-                color="inherit"
-                onClick={handleAccountMenuOpen}
-                aria-label="user account"
-              >
-                <AccountCircle />
-              </IconButton>
-              <Menu
-                anchorEl={anchorEl}
-                open={Boolean(anchorEl)}
-                onClose={handleAccountMenuClose}
-              >
-                <MenuItem disabled>
-                  <Typography variant="body2">
-                    {user?.firstName} {user?.lastName}
-                  </Typography>
-                </MenuItem>
-                <MenuItem disabled>
-                  <Typography variant="caption" color="textSecondary">
-                    Administrator
-                  </Typography>
-                </MenuItem>
-                <MenuItem onClick={handleLogout}>
-                  Logout
-                </MenuItem>
-              </Menu>
-            </div>
-          </Toolbar>
-        </AppBar>
-
-        {/* Page Content */}
-        <main 
-          className="flex-1"
-          style={{
-            marginLeft: drawerOpen ? '240px' : 0,
-            transition: 'margin-left 0.3s',
-          }}
-        >
-          {children}
-        </main>
-      </div>
+      {/* Page Content */}
+      <main 
+        className="flex-1 w-full"
+        style={{
+          marginTop: '64px',
+          marginLeft: drawerOpen ? '240px' : 0,
+          transition: 'margin-left 0.3s ease-in-out',
+          width: drawerOpen ? 'calc(100% - 240px)' : '100%',
+        }}
+      >
+        {children}
+      </main>
     </div>
   );
 };
