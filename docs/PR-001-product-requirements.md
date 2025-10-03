@@ -88,11 +88,16 @@ graph LR
 
 ### Customer-Facing Features
 
-#### Product Discovery
-- **Product Catalog**: Browse products by category (Pharmacy, Health, Personal Care)
-- **Search Functionality**: Full-text search with filters and sorting
-- **Product Details**: Comprehensive product information, images, specifications
-- **Product Reviews**: Customer ratings and reviews (future enhancement)
+#### Product Discovery & Landing Experience
+- **Unified Landing Page**: Amazon-style homepage combining hero section, category navigation, and full product catalog
+- **Hero Section**: Welcome message with primary CTAs ("Shop Now", "View Cart")
+- **Category Cards**: Visual navigation cards for Pharmacy, Health & Wellness, and Personal Care
+- **Product Catalog**: Full product listing visible on main page with search and filtering
+- **Search Functionality**: Real-time search with debouncing (300ms) across name and description
+- **Filter & Sort**: Category filtering and sorting by name, price (low-to-high, high-to-low)
+- **View Modes**: Toggle between grid and list views for product display
+- **Smooth Scrolling**: "Shop Now" and category clicks scroll smoothly to product section
+- **Product Details**: Comprehensive product information, images, specifications (via modal/page)
 
 #### Shopping Experience
 - **Shopping Cart**: Add/remove items, quantity adjustment, persistent cart

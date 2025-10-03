@@ -28,6 +28,58 @@ graph TB
     E --> E3[Payment Security]
 </lov-mermaid>
 
+## Customer Experience
+
+### FR-CX-001: Landing Page & Product Discovery
+
+**Requirement**: System shall provide an engaging landing page that combines welcome messaging, category navigation, and product discovery in a unified experience.
+
+#### Acceptance Criteria:
+- Landing page displays hero section with welcome message and primary CTAs
+- Category cards enable quick navigation to filtered product views
+- Product catalog is immediately visible below categories (Amazon-style layout)
+- Users can search, filter, and sort products without leaving the main page
+- Page supports smooth scrolling from hero to products section
+- Category selection automatically filters products and scrolls to catalog
+- Grid and list view options for product display
+- Real-time search with debouncing (300ms delay)
+
+#### Implementation Details:
+```typescript
+interface LandingPageSections {
+  hero: {
+    title: string;
+    subtitle: string;
+    primaryCTA: () => void;  // "Shop Now" - scrolls to products
+    secondaryCTA: () => void; // "View Cart" - navigates to cart
+  };
+  categories: CategoryCard[];
+  productCatalog: {
+    searchTerm: string;
+    selectedCategory: ProductCategory | 'all';
+    sortBy: 'name' | 'price-low' | 'price-high';
+    viewMode: 'grid' | 'list';
+  };
+}
+```
+
+<lov-mermaid>
+sequenceDiagram
+    participant U as User
+    participant LP as Landing Page
+    participant PC as Product Catalog
+    participant API as Backend API
+    
+    U->>LP: Visit site (/)
+    LP->>API: Fetch all products
+    API-->>LP: Return product list
+    LP->>U: Show hero + categories + products
+    U->>LP: Click category card
+    LP->>PC: Filter products
+    LP->>U: Smooth scroll to products
+    PC->>U: Display filtered results
+</lov-mermaid>
+
 ## User Management System
 
 ### FR-UM-001: User Authentication

@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import { useSearchParams } from 'react-router-dom';
-import { Search, Filter, Grid, List } from 'lucide-react';
+import { useSearchParams, useNavigate } from 'react-router-dom';
+import { Search, Filter, Grid, List, ShoppingCart, Pill, Heart, User } from 'lucide-react';
 import { CustomerLayout } from '../components/CustomerLayout';
 import { CompactProductCard } from '../components/CompactProductCard';
 import { mockProductsApi, Product, ProductCategory } from '@/shared/lib/api';
@@ -16,9 +16,11 @@ type ViewMode = 'grid' | 'list';
 type SortOption = 'name' | 'price-low' | 'price-high';
 
 /**
- * Products page component
+ * Products page component - Main landing page
  * 
  * Features:
+ * - Hero section with welcome message and CTAs
+ * - Category cards for quick navigation
  * - Unified product catalog with all products
  * - Advanced search and filtering
  * - Grid/List view toggle
@@ -27,6 +29,7 @@ type SortOption = 'name' | 'price-low' | 'price-high';
  * - Loading states and error handling
  */
 const ProductsPage: React.FC = () => {
+  const navigate = useNavigate();
   const [searchParams, setSearchParams] = useSearchParams();
   const [searchTerm, setSearchTerm] = useState<string>('');
   const [selectedCategory, setSelectedCategory] = useState<ProductCategory | 'all'>('all');
@@ -135,6 +138,34 @@ const ProductsPage: React.FC = () => {
 
   const activeFiltersCount = (searchTerm ? 1 : 0) + (selectedCategory !== 'all' ? 1 : 0);
 
+  const categories = [
+    {
+      title: 'Pharmacy',
+      description: 'Prescription medications and health consultations',
+      icon: <Pill className="w-12 h-12" />,
+      category: 'pharmacy' as ProductCategory,
+    },
+    {
+      title: 'Health & Wellness',
+      description: 'Vitamins, supplements, and health monitoring',
+      icon: <Heart className="w-12 h-12" />,
+      category: 'health' as ProductCategory,
+    },
+    {
+      title: 'Personal Care',
+      description: 'Beauty products, skincare, and daily essentials',
+      icon: <User className="w-12 h-12" />,
+      category: 'personal-care' as ProductCategory,
+    },
+  ];
+
+  const handleCategoryClick = (category: ProductCategory) => {
+    setSelectedCategory(category);
+    setSearchParams({ category });
+    // Scroll to products section
+    document.getElementById('products-section')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  };
+
   if (error) {
     return (
       <CustomerLayout>
@@ -155,12 +186,76 @@ const ProductsPage: React.FC = () => {
   return (
     <CustomerLayout>
       <div className="container mx-auto px-4 py-8">
-        {/* Header */}
-        <div className="mb-8">
-          <h1 className="text-4xl font-bold mb-2 text-walgreens-red">Our Products</h1>
-          <p className="text-muted-foreground text-lg">
-            Discover our wide range of health and wellness products
+        {/* Hero Section */}
+        <div className="text-center mb-12">
+          <h1 className="text-5xl font-bold mb-4 text-walgreens-red">
+            Welcome to Walgreens
+          </h1>
+          <p className="text-xl text-muted-foreground mb-8">
+            Your trusted partner in health and wellness
           </p>
+          <div className="flex gap-4 justify-center">
+            <Button
+              size="lg"
+              onClick={() => {
+                // Scroll to products section
+                document.getElementById('products-section')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+              }}
+              className="bg-walgreens-red hover:bg-walgreens-red/90"
+            >
+              Shop Now
+            </Button>
+            <Button
+              variant="outline"
+              size="lg"
+              onClick={() => navigate('/cart')}
+              className="border-walgreens-red text-walgreens-red hover:bg-walgreens-red hover:text-white"
+            >
+              <ShoppingCart className="w-4 h-4 mr-2" />
+              View Cart
+            </Button>
+          </div>
+        </div>
+
+        {/* Categories Section */}
+        <h2 className="text-3xl font-bold text-center mb-8">Shop by Category</h2>
+        
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
+          {categories.map((category) => (
+            <Card 
+              key={category.title}
+              className="cursor-pointer transition-all hover:scale-105 hover:shadow-lg border-walgreens-blue/20"
+              onClick={() => handleCategoryClick(category.category)}
+            >
+              <CardContent className="text-center p-8">
+                <div className="mb-6 text-walgreens-red flex justify-center">
+                  {category.icon}
+                </div>
+                <h3 className="text-xl font-semibold mb-3 text-walgreens-blue">
+                  {category.title}
+                </h3>
+                <p className="text-muted-foreground mb-6">
+                  {category.description}
+                </p>
+                <Button 
+                  variant="outline"
+                  className="border-walgreens-blue text-walgreens-blue hover:bg-walgreens-blue hover:text-white"
+                >
+                  Browse {category.title}
+                </Button>
+              </CardContent>
+            </Card>
+          ))}
+        </div>
+
+        {/* Products Section */}
+        <div id="products-section" className="scroll-mt-8">
+          <div className="mb-8">
+            <h2 className="text-4xl font-bold mb-2 text-walgreens-red">Our Products</h2>
+            <p className="text-muted-foreground text-lg">
+              Discover our wide range of health and wellness products
+            </p>
+          </div>
         </div>
 
         {/* Search and Filter Bar */}

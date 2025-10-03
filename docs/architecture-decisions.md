@@ -106,3 +106,38 @@ Strictest TypeScript configuration:
 - API responses require type definitions
 - Custom hooks must have proper return type annotations
 - No implicit returns in complex functions
+
+## ADR-006: Unified Landing Page Architecture
+
+**Status:** Accepted  
+**Date:** 2025-10-03  
+**Context:** Need to optimize user experience by reducing navigation friction and improving product discovery
+
+### Decision
+Adopted Amazon-style unified landing page combining hero section, category navigation, and product catalog:
+- Main route ("/") displays hero + categories + full product catalog
+- Category cards filter products in place with smooth scrolling
+- Product search and filtering without page navigation
+- Grid/list view toggle for user preference
+- Real-time search with 300ms debouncing
+
+### Benefits
+- **Reduced Friction:** Users see products immediately upon landing
+- **Better Discovery:** Hero and categories guide users to relevant products
+- **Improved UX:** No page loads for filtering, just smooth scrolling
+- **Amazon Pattern:** Familiar e-commerce pattern users expect
+- **SEO Friendly:** All products on main page for better indexing
+
+### Implementation
+```typescript
+// Both routes point to same component
+Route path="/" -> ProductsPage
+Route path="/products" -> ProductsPage (legacy support)
+```
+
+### User Flow
+1. User lands on "/" or "/products"
+2. Sees hero section with CTAs
+3. Views category cards
+4. Scrolls or clicks "Shop Now" to see products
+5. Filters/searches without leaving page

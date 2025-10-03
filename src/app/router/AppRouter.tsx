@@ -68,7 +68,7 @@ export const AppRouter: React.FC = () => {
           path="/"
           element={
             <ProtectedRoute requiredRole="customer">
-              <HomePage />
+              <ProductsPage />
             </ProtectedRoute>
           }
         />

@@ -40,6 +40,7 @@ This document provides a comprehensive technical specification for implementing 
 - **UI Framework**: Material UI 7.3.2 + Tailwind CSS
 - **Build Tool**: Vite
 - **Architecture Pattern**: Feature Sliced Design (FSD)
+- **Landing Page**: Combined hero section, category navigation, and product catalog (Amazon-style)
 
 ### Backend Architecture (To Implement)
 - **Pattern**: Clean Architecture / Hexagonal Architecture
