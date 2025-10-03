@@ -2,7 +2,7 @@
 
 ## Overview
 
-This document specifies the detailed functional requirements for the Walgreens POC e-commerce platform, defining system behavior, user interactions, and business logic implementation.
+This document specifies the detailed functional requirements for the Walgreens e-commerce platform, defining system behavior, user interactions, and business logic implementation.
 
 <lov-mermaid>
 graph TB

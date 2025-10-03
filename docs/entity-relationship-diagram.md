@@ -1,6 +1,6 @@
 # Entity Relationship Diagram
 
-This document provides visual representations of the database relationships and data flow for the Walgreens POC application.
+This document provides visual representations of the database relationships and data flow for the Walgreens application.
 
 ## Database Entity Relationships
 

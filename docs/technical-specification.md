@@ -1,6 +1,6 @@
-# Technical Specification - Walgreens POC
+# Technical Specification - Walgreens
 
-This document provides a comprehensive technical specification for implementing the Walgreens POC backend infrastructure, consolidating all models, contracts, and architectural decisions into a single reference.
+This document provides a comprehensive technical specification for implementing the Walgreens backend infrastructure, consolidating all models, contracts, and architectural decisions into a single reference.
 
 ## Table of Contents
 
@@ -70,7 +70,7 @@ Deployment: Docker + Kubernetes / AWS ECS
 ### Base Configuration
 
 ```yaml
-Base URL: https://api.walgreens-poc.com/v1
+Base URL: https://api.walgreens.com/v1
 Content-Type: application/json
 Authentication: Bearer JWT tokens
 Rate Limiting: 1000 requests/hour per user
@@ -298,8 +298,8 @@ interface JWTConfig {
   refreshTokenSecret: string;
   accessTokenExpiry: string;   // '1h'
   refreshTokenExpiry: string;  // '30d'
-  issuer: string;              // 'walgreens-poc'
-  audience: string;            // 'walgreens-poc-users'
+  issuer: string;              // 'walgreens'
+  audience: string;            // 'walgreens-users'
 }
 
 interface JWTPayload {
@@ -418,7 +418,7 @@ JWT_ACCESS_SECRET: 256-bit-secret
 JWT_REFRESH_SECRET: 256-bit-secret
 
 # External Services
-AWS_S3_BUCKET: walgreens-poc-assets
+AWS_S3_BUCKET: walgreens-assets
 STRIPE_SECRET_KEY: sk_live_...
 SENDGRID_API_KEY: sg_live_...
 

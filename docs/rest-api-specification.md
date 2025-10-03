@@ -1,6 +1,6 @@
 # REST API Specification
 
-This document provides a comprehensive specification for the Walgreens POC backend API. This specification serves as a contract between frontend and backend development teams and as a reference for future implementation.
+This document provides a comprehensive specification for the Walgreens backend API. This specification serves as a contract between frontend and backend development teams and as a reference for future implementation.
 
 ## Table of Contents
 
@@ -18,7 +18,7 @@ This document provides a comprehensive specification for the Walgreens POC backe
 
 ## Overview
 
-**Base URL**: `https://api.walgreens-poc.com/v1`
+**Base URL**: `https://api.walgreens.com/v1`
 **Content Type**: `application/json`
 **Authentication**: Bearer token (JWT)
 

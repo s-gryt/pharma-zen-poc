@@ -1,6 +1,6 @@
 # Database Schema Documentation - CURRENT IMPLEMENTATION STATUS
 
-This document provides an **ACCURATE** database schema specification for the Walgreens POC application based on what is **CURRENTLY IMPLEMENTED** in the codebase. 
+This document provides an **ACCURATE** database schema specification for the Walgreens application based on what is **CURRENTLY IMPLEMENTED** in the codebase.
 
 **⚠️ IMPORTANT**: This reflects only what is actually used in the current application, with unused entities clearly marked.
 

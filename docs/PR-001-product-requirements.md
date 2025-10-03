@@ -1,4 +1,4 @@
-# PR-001: Product Requirements Document - Walgreens POC
+# PR-001: Product Requirements Document - Walgreens
 
 ## Product Overview
 
