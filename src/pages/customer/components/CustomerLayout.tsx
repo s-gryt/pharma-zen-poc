@@ -31,21 +31,19 @@ export const CustomerLayout: React.FC<CustomerLayoutProps> = ({ children }) => {
   const { itemCount } = useCart();
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-screen bg-background flex flex-col">
       {/* Top Navigation Bar */}
       <header className="bg-white border-b border-walgreens-blue/20 shadow-sm">
         <div className="container mx-auto px-4">
           <div className="flex items-center justify-between h-16">
-            {/* Logo */}
-            <h1 
-              className="text-2xl font-bold text-walgreens-red cursor-pointer hover:text-walgreens-red/80 transition-colors"
-              onClick={() => navigate('/')}
-            >
-              Walgreens
-            </h1>
-
-            {/* Navigation Links */}
-            <nav className="hidden md:flex items-center space-x-6">
+            {/* Logo and Home */}
+            <div className="flex items-center space-x-4">
+              <h1 
+                className="text-2xl font-bold text-walgreens-red cursor-pointer hover:text-walgreens-red/80 transition-colors"
+                onClick={() => navigate('/')}
+              >
+                Walgreens
+              </h1>
               <Button 
                 variant="ghost" 
                 onClick={() => navigate('/')}
@@ -54,16 +52,7 @@ export const CustomerLayout: React.FC<CustomerLayoutProps> = ({ children }) => {
                 <Home className="w-4 h-4 mr-2" />
                 Home
               </Button>
-
-              <Button 
-                variant="ghost" 
-                onClick={() => navigate('/products')}
-                className="text-walgreens-blue hover:text-walgreens-red hover:bg-walgreens-light-blue/20"
-              >
-                <Package className="w-4 h-4 mr-2" />
-                Products
-              </Button>
-            </nav>
+            </div>
 
             {/* Right Side Actions */}
             <div className="flex items-center space-x-4">
