@@ -41,6 +41,7 @@ const ProductsPage: React.FC = () => {
   const [formOpen, setFormOpen] = useState(false);
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
   const [productToDelete, setProductToDelete] = useState<Product | null>(null);
+  const [isInitialLoad, setIsInitialLoad] = useState(true);
 
   // Fetch products
   const fetchProducts = useCallback(() => mockProductsApi.getProducts(), []);
@@ -49,6 +50,13 @@ const ProductsPage: React.FC = () => {
     loading: productsLoading,
     execute: refetchProducts
   } = useApi(fetchProducts, { immediate: true });
+
+  // Track when initial load is complete
+  React.useEffect(() => {
+    if (products !== null && isInitialLoad) {
+      setIsInitialLoad(false);
+    }
+  }, [products, isInitialLoad]);
 
   // Create product mutation
   const {
@@ -130,9 +138,10 @@ const ProductsPage: React.FC = () => {
         toast.success('Product created successfully');
       }
       
-      await refetchProducts();
       setFormOpen(false);
       setSelectedProduct(null);
+      // Refetch in background without blocking UI
+      refetchProducts();
     } catch (error) {
       const errorMessage = error instanceof Error ? error.message : 'Operation failed';
       toast.error(errorMessage);
@@ -145,17 +154,20 @@ const ProductsPage: React.FC = () => {
     try {
       await deleteProduct(productToDelete.id);
       toast.success('Product deleted successfully');
-      await refetchProducts();
+      setDeleteDialogOpen(false);
+      setProductToDelete(null);
+      // Refetch in background without blocking UI
+      refetchProducts();
     } catch (error) {
       const errorMessage = error instanceof Error ? error.message : 'Delete failed';
       toast.error(errorMessage);
-    } finally {
       setDeleteDialogOpen(false);
       setProductToDelete(null);
     }
   };
 
-  if (productsLoading) {
+  // Only show full-page loading on initial load
+  if (isInitialLoad && productsLoading) {
     return (
       <AdminLayout>
         <Container maxWidth="lg" className="py-8">
