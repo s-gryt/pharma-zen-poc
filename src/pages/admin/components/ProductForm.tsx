@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   Dialog,
   DialogTitle,
@@ -45,6 +45,32 @@ export const ProductForm: React.FC<ProductFormProps> = ({
     stockQuantity: product?.stockQuantity || 0,
   });
   const [errors, setErrors] = useState<Record<string, string>>({});
+
+  // Update form data when product prop changes or dialog opens
+  useEffect(() => {
+    if (open && product) {
+      setFormData({
+        name: product.name,
+        description: product.description,
+        price: product.price,
+        category: product.category,
+        imageUrl: product.imageUrl || '',
+        stockQuantity: product.stockQuantity,
+      });
+      setErrors({});
+    } else if (open && !product) {
+      // Reset for new product
+      setFormData({
+        name: '',
+        description: '',
+        price: 0,
+        category: 'pharmacy',
+        imageUrl: '',
+        stockQuantity: 0,
+      });
+      setErrors({});
+    }
+  }, [open, product]);
 
   const categories: Array<{ value: ProductCategory; label: string }> = [
     { value: 'pharmacy', label: 'Pharmacy' },

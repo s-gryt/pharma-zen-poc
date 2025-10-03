@@ -41,7 +41,7 @@ export const CustomerLayout: React.FC<CustomerLayoutProps> = ({ children }) => {
               className="text-2xl font-bold text-walgreens-red cursor-pointer hover:text-walgreens-red/80 transition-colors"
               onClick={() => navigate('/')}
             >
-              Walgreens POC
+              Walgreens
             </h1>
 
             {/* Navigation Links */}
@@ -114,7 +114,7 @@ export const CustomerLayout: React.FC<CustomerLayoutProps> = ({ children }) => {
         <div className="container mx-auto px-4 py-8">
           <div className="text-center">
             <p className="text-sm opacity-90">
-              © 2024 Walgreens POC. Built with clean architecture principles.
+              © 2024 Walgreens. Built with clean architecture principles.
             </p>
             {user?.role === 'admin' && (
               <p className="text-walgreens-teal text-sm mt-2 font-medium">

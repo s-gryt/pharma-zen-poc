@@ -144,7 +144,7 @@ export const AdminLayout: React.FC<AdminLayoutProps> = ({ children }) => {
 
             {/* Logo */}
             <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
-              Walgreens POC - Admin
+              Walgreens - Admin
             </Typography>
 
             {/* User Account Menu */}
