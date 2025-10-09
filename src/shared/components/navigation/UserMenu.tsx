@@ -91,8 +91,7 @@ export const UserMenu: React.FC<UserMenuProps> = ({
    */
   const handleProfile = () => {
     handleMenuClose();
-    // TODO: Implement profile page navigation
-    // navigate('/profile');
+    navigate('/profile');
   };
 
   /**

@@ -8,6 +8,7 @@ import { LoadingSpinner } from '@/shared/components/ui/LoadingSpinner';
 const LoginPage = React.lazy(() => import('@/pages/auth/LoginPage'));
 const HomePage = React.lazy(() => import('@/pages/customer/HomePage'));
 const ProductsPage = React.lazy(() => import('@/pages/customer/ProductsPage'));
+const ProfilePage = React.lazy(() => import('@/pages/customer/ProfilePage'));
 const CartPage = React.lazy(() => import('@/pages/customer/CartPage'));
 const CheckoutPage = React.lazy(() => import('@/pages/customer/CheckoutPage'));
 const AdminDashboardPage = React.lazy(() => import('@/pages/admin/DashboardPage'));
@@ -78,6 +79,15 @@ export const AppRouter: React.FC = () => {
           element={
             <ProtectedRoute requiredRole="customer">
               <ProductsPage />
+            </ProtectedRoute>
+          }
+        />
+        
+        <Route
+          path="/profile"
+          element={
+            <ProtectedRoute requiredRole="customer">
+              <ProfilePage />
             </ProtectedRoute>
           }
         />
